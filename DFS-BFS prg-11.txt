@@ -1,0 +1,67 @@
+#include<stdio.h>
+int n,a[10][10],src;
+int visited[10];
+int q[10];
+void bfs(int src)
+{
+    int v,front=0,rear=-1,u;
+    visited[src]=1;
+    q[++rear]=src;
+    while(front<=rear)
+    {
+        u=q[front++];
+        for(int v=0;v<n;v++)
+        {
+            if(a[u][v]==1 && visited[v]==0)
+            {
+                visited[v]=1;
+                q[++rear]=v;
+                printf("%d is reachable \n",v);
+            }
+        }
+    }
+}
+void dfs(int u)
+{
+    int v;
+    visited[u]=1;
+    for(v=0;v<n;v++)
+    {
+        if(a[u][v]==1 && visited[v]==0)
+        {
+            printf("%d is reachable\n",v);
+            dfs(v);
+        }
+    }
+}
+void main()
+{
+    int i,j;
+    printf("Enter number of nodes in graph:");
+    scanf("%d",&n);
+    printf("Enter adjacency matrix:");
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            scanf("%d",&a[i][j]);
+        }
+    }
+    printf("Enter source:");
+    scanf("%d",&src);
+
+    printf("Bfs\n");
+    printf("Nodes reachable from node %d are\n",src);
+    for(int i=0;i<n;i++)
+    {
+        visited[i]=0;
+    }
+    bfs(src);
+    printf("dfs\n");
+    printf("Nodes reachable from node %d are\n",src);
+    for(int i=0;i<n;i++)
+    {
+        visited[i]=0;
+    }
+    dfs(src);
+}
