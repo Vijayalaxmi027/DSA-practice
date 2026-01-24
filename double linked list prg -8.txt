@@ -1,0 +1,196 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    int ssn;
+    char name[25];
+    char dept[25];
+    int salary;
+    char desig[25];
+    long int phno;
+    struct node *llink;
+    struct node *rlink;
+};
+
+typedef struct node *NODE;
+
+NODE getnode()
+{
+    NODE temp;
+    temp = (NODE)malloc(sizeof(struct node));
+    if (temp == NULL)
+    {
+        printf("Insufficient Memory\n");
+        exit(0);
+    }
+
+    printf("Enter the SSN: ");
+    scanf("%d", &temp->ssn);
+    printf("Enter the name: ");
+    scanf("%s", temp->name);
+    printf("Enter the dept: ");
+    scanf("%s", temp->dept);
+    printf("Enter the salary: ");
+    scanf("%d", &temp->salary);
+    printf("Enter the Designation: ");
+    scanf("%s", temp->desig);
+    printf("Enter the contact number: ");
+    scanf("%ld", &temp->phno);
+
+    temp->llink = NULL;
+    temp->rlink = NULL;
+    return temp;
+}
+
+NODE insert_front(NODE head)
+{
+    NODE temp;
+    temp = getnode();
+    if (head == NULL)
+    {
+        return temp;
+    }
+    temp->rlink = head;
+    head->llink = temp;
+    head = temp;
+    return head;
+}
+
+NODE insert_rear(NODE head)
+{
+    NODE temp, cur;
+    temp = getnode();
+
+    if (head == NULL)
+    {
+        return temp;
+    }
+
+    cur = head;
+    while (cur->rlink != NULL)
+    {
+        cur = cur->rlink;
+    }
+
+    cur->rlink = temp;
+    temp->llink = cur;
+    return head;
+}
+
+void display(NODE head)
+{
+    NODE cur;
+    int count = 0;
+    if (head == NULL)
+    {
+        printf("List is empty\n");
+        return;
+    }
+    printf("\nContents of the list are\n");
+    printf("Name\tSSN\tDept\tSalary\tDesignation\tPhoneNum\n");
+    cur = head;
+    while (cur != NULL)
+    {
+        printf("%s\t%d\t%s\t%d\t%s\t\t%ld\n", cur->name, cur->ssn, cur->dept, cur->salary, cur->desig, cur->phno);
+        cur = cur->rlink;
+        count++;
+    }
+    printf("\nNumber of nodes in the list: %d\n", count);
+}
+
+NODE delete_front(NODE head)
+{
+    NODE temp;
+    if (head == NULL)
+    {
+        printf("\nList is empty\n");
+        return head;
+    }
+    if (head->rlink == NULL)
+    {
+        printf("Details deleted\n");
+        free(head);
+        return NULL;
+    }
+    temp = head;
+    head = head->rlink;
+    head->llink = NULL;
+    printf("\nDetails deleted\n");
+    free(temp);
+    return head;
+}
+
+NODE delete_rear(NODE head)
+{
+    NODE cur, prev;
+    if (head == NULL)
+    {
+        printf("\nList is empty\n");
+        return head;
+    }
+    if (head->rlink == NULL)
+    {
+        printf("Details deleted\n");
+        free(head);
+        return NULL;
+    }
+    prev = NULL;
+    cur = head;
+
+    while (cur->rlink != NULL)
+    {
+        prev = cur;
+        cur = cur->rlink;
+    }
+    printf("Details deleted\n");
+    free(cur);
+
+    prev->rlink = NULL;
+    return head;
+}
+
+int main()
+{
+    NODE head = NULL;
+    int ch, n, i;
+
+    printf("Enter number of employees: ");
+    scanf("%d", &n);
+
+    for (i = 0; i < n; i++)
+        head = insert_rear(head);
+
+    for (;;)
+    {
+        printf("\n1: Insert Front   2: Insert Rear\n");
+        printf("3: Delete Front   4: Delete Rear\n");
+        printf("5: Display        6: Exit\n");
+
+        printf("Enter your choice: ");
+        scanf("%d", &ch);
+
+        switch (ch)
+        {
+        case 1:
+            head = insert_front(head);
+            break;
+        case 2:
+            head = insert_rear(head);
+            break;
+        case 3:
+            head = delete_front(head);
+            break;
+        case 4:
+            head = delete_rear(head);
+            break;
+        case 5:
+            display(head);
+            break;
+        case 6:
+            exit(0);
+        }
+    }
+
+    return 0;
+}
